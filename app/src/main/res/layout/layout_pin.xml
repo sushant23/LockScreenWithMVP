@@ -1,20 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/holo_red_dark">
+<?xml version="1.0" encoding="utf-8"?><!--<net.frakbot.glowpadbackport.GlowPadView--><!--android:background="@android:color/black"--><!--android:id="@+id/incomingCallWidget"--><!--android:layout_width="fill_parent"--><!--android:layout_height="fill_parent"--><!--android:layout_below="@+id/btn_toggle_padmult"--><!--android:layout_marginTop="-10dp"--><!--android:layout_marginBottom="-46dp"--><!--android:visibility="visible"--><!--android:gravity="top"--><!--app:targetDrawables="@array/incoming_call_widget_2way_targets"--><!--app:handleDrawable="@drawable/ic_in_call_touch_handle"--><!--app:innerRadius="@dimen/glowpadview_inner_radius"--><!--app:outerRadius="@dimen/glowpadview_target_placement_radius"--><!--app:outerRingDrawable="@drawable/ic_lockscreen_outerring"--><!--app:snapMargin="@dimen/glowpadview_snap_margin"--><!--app:feedbackCount="1"--><!--app:glowRadius="@dimen/glowpadview_glow_radius"--><!--app:pointDrawable="@drawable/ic_lockscreen_glowdot"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:android="http://schemas.android.com/apk/res/android" />-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditText
-        android:hint="@string/enter_pin"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:id="@+id/etPin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"/>
+        android:layout_centerHorizontal="true"
+        android:inputType="numberPassword"
+        android:textColor="@android:color/white"
+        android:background="@android:color/transparent"
+        android:textSize="30sp"
+        android:cursorVisible="false"
+        android:hint="Tap here"
+        android:gravity="center"/>
 
     <Button
-        android:text="@string/unlock"
         android:id="@+id/btnUnlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etPin" />
-</RelativeLayout>
+        android:layout_below="@id/etPin"
+        android:text="Unlock"/>
+</merge>

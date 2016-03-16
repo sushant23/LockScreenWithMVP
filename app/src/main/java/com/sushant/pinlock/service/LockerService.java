@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
@@ -13,7 +14,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.sushant.pinlock.util.KeyGuardUtil;
-import com.sushant.pinlock.view.PinView;
+import com.sushant.pinlock.view.MainViewPager;
 
 /**
  * Created by braindigit on 3/14/16.
@@ -22,6 +23,8 @@ public class LockerService extends Service {
 
     private static LockerService lockerService = null;
 
+    private MyBinder myBinder = new MyBinder();
+
     private WindowManager windowManager;
     private BroadcastReceiver callReceiver;
     private WindowManager.LayoutParams playerParams = new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -29,14 +32,30 @@ public class LockerService extends Service {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             PixelFormat.TRANSLUCENT);
 
-    private PinView pinView;
     private boolean isViewAttached = false;
+    private MainViewPager mainViewPager;
 
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return myBinder;
+    }
+
+    public WindowManager getWindowManager() {
+        return windowManager;
+    }
+
+    public boolean hasView() {
+        return isViewAttached;
+    }
+
+    public class MyBinder extends Binder{
+
+        public LockerService getService(){
+            return LockerService.this;
+        }
+
     }
 
     @Override
@@ -54,7 +73,7 @@ public class LockerService extends Service {
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         KeyGuardUtil.init(this);
-        pinView = new PinView(this);
+        mainViewPager = new MainViewPager(this);
         callReceiver = new CallsReceiver();
         IntentFilter callFilter = new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
         registerReceiver(callReceiver, callFilter);
@@ -72,10 +91,15 @@ public class LockerService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                showView();
+
+                screenOnBradCastReceived();
             }
         }
     };
+
+    public void screenOnBradCastReceived() {
+        showView();
+    }
 
 
     class CallsReceiver extends BroadcastReceiver {
@@ -86,14 +110,14 @@ public class LockerService extends Service {
             if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
                 removeView();
             } else {
-                showView();
+                screenOnBradCastReceived();
             }
         }
     }
 
     public void removeView() {
         if (isViewAttached) {
-            windowManager.removeView(pinView);
+            windowManager.removeView(mainViewPager);
             KeyGuardUtil.getInstance().disableKeyGuard();
             isViewAttached = false;
         }
@@ -101,7 +125,7 @@ public class LockerService extends Service {
 
     public void showView() {
         if (!isViewAttached) {
-            windowManager.addView(pinView, playerParams);
+            windowManager.addView(mainViewPager, playerParams);
             KeyGuardUtil.getInstance().disableKeyGuard();
             isViewAttached = true;
         }
