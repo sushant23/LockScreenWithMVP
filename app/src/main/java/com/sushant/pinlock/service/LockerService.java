@@ -9,12 +9,17 @@ import android.graphics.PixelFormat;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.sushant.pinlock.R;
 import com.sushant.pinlock.util.KeyGuardUtil;
 import com.sushant.pinlock.view.MainViewPager;
+import com.sushant.pinlock.view.PinView;
 
 /**
  * Created by braindigit on 3/14/16.
@@ -34,6 +39,8 @@ public class LockerService extends Service {
 
     private boolean isViewAttached = false;
     private MainViewPager mainViewPager;
+    private PinView pinView;
+    private View viewPagerContainer;
 
 
     @Nullable
@@ -74,6 +81,8 @@ public class LockerService extends Service {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         KeyGuardUtil.init(this);
         mainViewPager = new MainViewPager(this);
+        pinView = new PinView(this);
+        viewPagerContainer = LayoutInflater.from(this).inflate(R.layout.layout_viewpager_container, null);
         callReceiver = new CallsReceiver();
         IntentFilter callFilter = new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
         registerReceiver(callReceiver, callFilter);
@@ -117,7 +126,7 @@ public class LockerService extends Service {
 
     public void removeView() {
         if (isViewAttached) {
-            windowManager.removeView(mainViewPager);
+            windowManager.removeView(viewPagerContainer);
             KeyGuardUtil.getInstance().disableKeyGuard();
             isViewAttached = false;
         }
@@ -125,7 +134,8 @@ public class LockerService extends Service {
 
     public void showView() {
         if (!isViewAttached) {
-            windowManager.addView(mainViewPager, playerParams);
+            ((ViewPager)viewPagerContainer.findViewById(R.id.viewPager)).setCurrentItem(0);
+            windowManager.addView(viewPagerContainer, playerParams);
             KeyGuardUtil.getInstance().disableKeyGuard();
             isViewAttached = true;
         }

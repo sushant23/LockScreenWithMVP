@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.sushant.pinlock.R;
 import com.sushant.pinlock.view.PinView;
 
 /**
@@ -36,15 +37,15 @@ public class MainViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View view = null;
         switch (position) {
-            case 1:
+            case 0:
                 ImageView imageView = new ImageView(context);
                 imageView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_blue_light));
                 ViewGroup.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 imageView.setLayoutParams(layoutParams);
-                imageView.setImageResource(android.R.drawable.ic_btn_speak_now);
+                imageView.setImageResource(R.drawable.sample);
                 view = imageView;
                 break;
-            case 0:
+            case 1:
                 view = new PinView(context);
                 break;
         }

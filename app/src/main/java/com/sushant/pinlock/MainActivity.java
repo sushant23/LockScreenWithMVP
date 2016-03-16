@@ -14,9 +14,9 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new MainViewPager(this));
+//        setContentView(new MainViewPager(this));
         Intent intent = new Intent(this, LockerService.class);
 
-//        startService(intent);
+        startService(intent);
     }
 }
