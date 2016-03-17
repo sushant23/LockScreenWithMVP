@@ -85,9 +85,9 @@ public class LockerService extends Service {
         viewPagerContainer = LayoutInflater.from(this).inflate(R.layout.layout_viewpager_container, null);
         callReceiver = new CallsReceiver();
         IntentFilter callFilter = new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-        registerReceiver(callReceiver, callFilter);
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
+        registerReceiver(callReceiver, callFilter);
         registerReceiver(lockScreenReceiver, filter);
 
     }
@@ -99,14 +99,14 @@ public class LockerService extends Service {
     BroadcastReceiver lockScreenReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
 
-                screenOnBradCastReceived();
+                screenOffBroadcastReceived();
             }
         }
     };
 
-    public void screenOnBradCastReceived() {
+    public void screenOffBroadcastReceived() {
         showView();
     }
 
@@ -119,7 +119,7 @@ public class LockerService extends Service {
             if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
                 removeView();
             } else {
-                screenOnBradCastReceived();
+                showView();
             }
         }
     }

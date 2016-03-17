@@ -46,7 +46,7 @@ public class LockerServiceTest {
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
-                lockerService.screenOnBradCastReceived();
+                lockerService.screenOffBroadcastReceived();
                 assertTrue(lockerService.hasView());
             }
         });
